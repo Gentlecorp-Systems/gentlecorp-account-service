@@ -4,9 +4,11 @@ input CreateAccountInput {
     transactionLimit: Int
     userId: ID!
     username: String!
+    category: AccountType!
 }
 
 input UpdateAccountInput {
     transactionLimit: Int
     balance: Int
+    state: StatusType
 }

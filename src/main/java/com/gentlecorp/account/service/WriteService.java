@@ -23,6 +23,7 @@ import java.util.UUID;
 
 //import static com.gentlecorp.account.model.enums.StatusType.ACTIVE;
 //import static com.gentlecorp.account.model.enums.StatusType.CLOSED;
+import static com.gentlecorp.account.model.enums.StatusType.ACTIVE;
 import static com.gentlecorp.account.security.enums.RoleType.ADMIN;
 import static com.gentlecorp.account.util.VersionUtils.validateVersion;
 import static java.util.Locale.GERMAN;
@@ -41,13 +42,73 @@ public class WriteService {
 //    final var customerId = account.getCustomerId();
 //    final var customer = readService.findCustomerById(customerId, token);
 //    final var existingAccounts = readService.findByCustomerId(customerId,jwt);
-  /*  account.setState(ACTIVE);*/
+
+    final var initialTransactionLimit = account.getTransactionLimit();
+    // Standardwerte setzen basierend auf der Kategorie
+    initializeDefaults(account);
+
+    if (initialTransactionLimit != 0) {
+      account.setTransactionLimit(initialTransactionLimit);
+    }
+
+    account.setState(ACTIVE);
+    account.setBalance(BigDecimal.ZERO);
     log.debug("create: account={}", account);
 
     final var accountDb = accountRepository.save(account);
     log.trace("create: Thread-ID={}", Thread.currentThread().threadId());
     log.debug("create: accountDb={}", accountDb);
     return accountDb;
+  }
+
+  private void initializeDefaults(Account account) {
+    if (account.getCategory() == null) {
+      throw new IllegalArgumentException("Account category must not be null");
+    }
+
+    switch (account.getCategory()) {
+      case SAVINGS -> {
+        account.setRateOfInterest(1.5);
+        account.setOverdraftLimit(BigDecimal.ZERO);
+        account.setTransactionLimit(10);
+      }
+      case CHECKING -> {
+        account.setRateOfInterest(0.1);
+        account.setOverdraftLimit(new BigDecimal("500.00"));
+        account.setTransactionLimit(50);
+      }
+      case CREDIT -> {
+        account.setRateOfInterest(12.0);
+        account.setOverdraftLimit(new BigDecimal("5000.00"));
+        account.setTransactionLimit(100);
+      }
+      case DEPOSIT -> {
+        account.setRateOfInterest(3.0);
+        account.setOverdraftLimit(BigDecimal.ZERO);
+        account.setTransactionLimit(0);
+      }
+      case INVESTMENT -> {
+        account.setRateOfInterest(5.0);
+        account.setOverdraftLimit(BigDecimal.ZERO);
+        account.setTransactionLimit(5);
+      }
+      case LOAN -> {
+        account.setRateOfInterest(7.5);
+        account.setOverdraftLimit(new BigDecimal("10000.00"));
+        account.setTransactionLimit(1);
+      }
+      case BUSINESS -> {
+        account.setRateOfInterest(2.0);
+        account.setOverdraftLimit(new BigDecimal("10000.00"));
+        account.setTransactionLimit(200);
+      }
+      case JOINT -> {
+        account.setRateOfInterest(1.0);
+        account.setOverdraftLimit(new BigDecimal("2000.00"));
+        account.setTransactionLimit(20);
+      }
+      default -> throw new IllegalStateException("Unexpected account type: " + account.getCategory());
+    }
   }
 
   public Account update(final Account accountInput, UUID id, int version, final CustomUserDetails user) {

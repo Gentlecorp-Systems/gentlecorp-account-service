@@ -1,0 +1,18 @@
+enum AccountType {
+    SAVINGS # Savings account for saving money
+CHECKING # Checking account for daily transactions
+CREDIT #Konto für eine kredit karte
+DEPOSIT #wie ein festgeld konto mehr zinsen aber geld sieht man erst am ende des zeitraum
+INVESTMENT
+LOAN #Account for loans and overdrafts
+BUSINESS #Account for business purposes
+JOINT
+}
+
+enum StatusType {
+    ACTIVE
+    BLOCKED
+    CLOSED
+    SUSPENDED
+    FROZEN
+}

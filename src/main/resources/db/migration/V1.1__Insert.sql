@@ -1,4 +1,4 @@
-INSERT INTO account ( id, version, balance, rate_of_interest, category, state, overdraft, transaction_limit, created, updated, user_id, username)
+INSERT INTO account ( id, version, balance, rate_of_interest, category, state, overdraft_limit, transaction_limit, created, updated, user_id, username)
 VALUES
     ('30000000-0000-0000-0000-000000000000', 1, 1000, 0.05, 'SAVINGS', 'ACTIVE', 0, 1000, '2022-01-31 00:00:00','2022-01-31 00:00:00', '00000000-0000-0000-0000-000000000000', 'admin'),
     ('30000000-0000-0000-0000-000000000002', 1, 15000, 0.04, 'CREDIT', 'BLOCKED', 1000, 5000, '2022-01-31 00:00:00','2022-01-31 00:00:00', '00000000-0000-0000-0000-000000000002', 'mark.williams2'),

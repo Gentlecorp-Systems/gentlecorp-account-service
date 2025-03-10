@@ -1,6 +1,10 @@
 package com.gentlecorp.account.model.entity;
 
+import com.gentlecorp.account.model.enums.AccountType;
+import com.gentlecorp.account.model.enums.StatusType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -38,6 +42,17 @@ public class Account {
     private int version;
 
     private BigDecimal balance;
+
+
+    private double rateOfInterest;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType category;
+
+    @Enumerated(EnumType.STRING)
+    private StatusType state;
+
+    private BigDecimal overdraftLimit;
     private int transactionLimit;
 
     @CreationTimestamp
