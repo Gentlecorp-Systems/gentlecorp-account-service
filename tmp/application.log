@@ -1,0 +1,548 @@
+2025-03-09T20:53:48.835+01:00  INFO 40498 --- [restartedMain] o.f.c.i.command.clean.CleanExecutor      : Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+
+2025-03-09T20:53:48.866+01:00  INFO 40498 --- [restartedMain] o.f.c.i.command.clean.CleanExecutor      : Successfully cleaned schema "account" (execution time 00:00.028s)
+
+2025-03-09T20:53:48.872+01:00  INFO 40498 --- [restartedMain] o.f.c.i.command.clean.CleanExecutor      : Successfully cleaned schema "account" (execution time 00:00.005s)
+
+2025-03-09T20:53:48.872+01:00  INFO 40498 --- [restartedMain] o.f.c.i.command.clean.CleanExecutor      : Successfully dropped post-schema database level objects (execution time 00:00.000s)
+
+2025-03-09T20:53:48.900+01:00  INFO 40498 --- [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "account"."flyway_schema_history" does not exist yet
+
+2025-03-09T20:53:48.901+01:00  INFO 40498 --- [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.005s)
+
+2025-03-09T20:53:48.905+01:00  INFO 40498 --- [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "account"."flyway_schema_history" ...
+
+2025-03-09T20:53:48.909+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : Executing SQL: CREATE TABLE "account"."flyway_schema_history" (
+    "installed_rank" INT NOT NULL,
+    "version" VARCHAR(50),
+    "description" VARCHAR(200) NOT NULL,
+    "type" VARCHAR(20) NOT NULL,
+    "script" VARCHAR(1000) NOT NULL,
+    "checksum" INTEGER,
+    "installed_by" VARCHAR(100) NOT NULL,
+    "installed_on" TIMESTAMP NOT NULL DEFAULT now(),
+    "execution_time" INTEGER NOT NULL,
+    "success" BOOLEAN NOT NULL
+) TABLESPACE "accountspace"
+
+2025-03-09T20:53:48.916+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : 0 rows affected
+
+2025-03-09T20:53:48.916+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : Executing SQL: ALTER TABLE "account"."flyway_schema_history" ADD CONSTRAINT "flyway_schema_history_pk" PRIMARY KEY ("installed_rank") USING INDEX TABLESPACE "accountspace"
+
+2025-03-09T20:53:48.917+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : 0 rows affected
+
+2025-03-09T20:53:48.917+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : Executing SQL: CREATE INDEX "flyway_schema_history_s_idx" ON "account"."flyway_schema_history" ("success") TABLESPACE "accountspace"
+
+2025-03-09T20:53:48.918+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : 0 rows affected
+
+2025-03-09T20:53:48.925+01:00  INFO 40498 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "account": << Empty Schema >>
+
+2025-03-09T20:53:48.927+01:00  INFO 40498 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Migrating schema "account" to version "1.0 - Create"
+
+2025-03-09T20:53:48.928+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : Executing SQL: -- Erstelle die Tabelle im TABLESPACE 'accountspace'
+CREATE TABLE account (
+                         id               uuid PRIMARY KEY USING INDEX TABLESPACE accountspace,
+                         version          integer NOT NULL DEFAULT 1,
+                         balance          DECIMAL(10, 2),
+                         rate_of_interest DECIMAL(10, 2) NOT NULL,
+                         category         VARCHAR(20) NOT NULL,
+                         state            VARCHAR(12) NOT NULL,
+                         overdraft        INT,
+                         transaction_limit INT,
+                         created          timestamp NOT NULL,
+                         updated          timestamp NOT NULL,
+                         user_id          UUID NOT NULL,
+    username VARCHAR(20) NOT NULL
+) TABLESPACE accountspace
+
+2025-03-09T20:53:48.936+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : 0 rows affected
+
+2025-03-09T20:53:48.936+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : Executing SQL: -- Optional: Falls du den Index auf user_id im accountspace-Tablespace haben möchtest:
+CREATE INDEX idx_account_user_id ON account (user_id) TABLESPACE accountspace
+
+2025-03-09T20:53:48.937+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : 0 rows affected
+
+2025-03-09T20:53:48.945+01:00  INFO 40498 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Migrating schema "account" to version "1.1 - Insert"
+
+2025-03-09T20:53:48.945+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : Executing SQL: INSERT INTO account ( id, version, balance, rate_of_interest, category, state, overdraft, transaction_limit, created, updated, user_id, username)
+VALUES
+    ('30000000-0000-0000-0000-000000000000', 0, 1000, 0.05, 'SAVINGS', 'ACTIVE', 0, 1000, '2022-01-31 00:00:00','2022-01-31 00:00:00', '00000000-0000-0000-0000-000000000000', 'admin'),
+    ('30000000-0000-0000-0000-000000000002', 0, 15000, 0.04, 'CREDIT', 'BLOCKED', 1000, 5000, '2022-01-31 00:00:00','2022-01-31 00:00:00', '00000000-0000-0000-0000-000000000002', 'mark.williams2'),
+    ('30000000-0000-0000-0000-000000000003', 0, 10000, 0.02, 'DEPOSIT', 'CLOSED', 0, 3000, '2022-01-31 00:00:00','2022-01-31 00:00:00',    '00000000-0000-0000-0000-000000000003', 'julia'),
+    ('30000000-0000-0000-0000-000000000004', 0, 20000, 0.05, 'INVESTMENT', 'ACTIVE', 0, 4000, '2022-01-31 00:00:00','2022-01-31 00:00:00', '00000000-0000-0000-0000-000000000004', 'anna.schmidt'),
+
+    ('30000000-0000-0000-0000-000000000001', 0, 5000, 0.03, 'CHECKING', 'ACTIVE', 500, 2000, '2022-01-31 00:00:00','2022-01-31 00:00:00',  '00000000-0000-0000-0000-000000000005', 'erik'),
+    ('30000000-0000-0000-0000-000000000005', 0, 3000, 0.06, 'LOAN', 'BLOCKED', 500, 1000, '2022-01-31 00:00:00','2022-01-31 00:00:00',     '00000000-0000-0000-0000-000000000005', 'erik'),
+
+    ('30000000-0000-0000-0000-000000000007', 0, 12500, 0.03, 'CHECKING', 'ACTIVE', 1000, 2500, '2022-01-31 00:00:00','2022-01-31 00:00:00','00000000-0000-0000-0000-000000000007', 'shamaar'),
+    ('30000000-0000-0000-0000-000000000008', 0, 50000, 0.04, 'CREDIT', 'BLOCKED', 2000, 6000, '2022-01-31 00:00:00','2022-01-31 00:00:00', '00000000-0000-0000-0000-000000000008', 'john.muller'),
+
+    ('30000000-0000-0000-0000-000000000009', 0, 35000, 0.05, 'DEPOSIT', 'CLOSED', 0, 4500, '2022-01-31 00:00:00','2022-01-31 00:00:00',    '00000000-0000-0000-0000-000000000025', 'gentlecg99'),
+    ('30000000-0000-0000-0000-000000000010', 0, 40000, 0.02, 'INVESTMENT', 'ACTIVE', 0, 3500, '2022-01-31 00:00:00','2022-01-31 00:00:00', '00000000-0000-0000-0000-000000000025', 'gentlecg99'),
+
+    ('30000000-0000-0000-0000-000000000006', 0, 7500, 0.01, 'SAVINGS', 'CLOSED', 0, 1500, '2022-01-31 00:00:00','2022-01-31 00:00:00',     '00000000-0000-0000-0000-000000000026', 'leroy135'),
+    ('30000000-0000-0000-0000-000000000011', 1, 0, 0.02, 'INVESTMENT', 'ACTIVE', 0, 3500, '2022-01-31 00:00:00','2022-01-31 00:00:00',     '00000000-0000-0000-0000-000000000026', 'leroy135')
+
+2025-03-09T20:53:48.947+01:00 DEBUG 40498 --- [restartedMain] o.f.c.i.s.DefaultSqlScriptExecutor       : 12 rows affected
+
+2025-03-09T20:53:48.953+01:00  INFO 40498 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "account", now at version v1.1 (execution time 00:00.012s)
+
+2025-03-09T20:53:48.996+01:00  INFO 40498 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+
+2025-03-09T20:53:49.027+01:00  INFO 40498 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 7.0.0.Alpha2
+
+2025-03-09T20:53:49.040+01:00  INFO 40498 --- [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+
+2025-03-09T20:53:49.138+01:00  INFO 40498 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+
+2025-03-09T20:53:49.516+01:00  INFO 40498 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+
+2025-03-09T20:53:49.517+01:00  INFO 40498 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+
+2025-03-09T20:53:49.844+01:00 DEBUG 40498 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+
+2025-03-09T20:53:49.987+01:00  INFO 40498 --- [restartedMain] efaultSchemaResourceGraphQlSourceBuilder : Loaded 3 resource(s) in the GraphQL schema.
+
+2025-03-09T20:53:50.064+01:00  INFO 40498 --- [restartedMain] o.s.b.a.g.GraphQlAutoConfiguration       : GraphQL schema inspection:
+	Unmapped fields: {Query=[_service]}
+	Unmapped registrations: {}
+	Unmapped arguments: {}
+	Skipped types: []
+
+2025-03-09T20:53:50.075+01:00  INFO 40498 --- [restartedMain] s.b.a.g.s.GraphQlWebMvcAutoConfiguration : GraphQL endpoint HTTP POST /graphql
+
+2025-03-09T20:53:50.151+01:00  INFO 40498 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+
+2025-03-09T20:53:50.434+01:00  INFO 40498 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+
+2025-03-09T20:53:50.461+01:00  INFO 40498 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 9001 (http) with context path '/'
+
+2025-03-09T20:53:50.468+01:00  INFO 40498 --- [restartedMain] c.gentlecorp.account.AccountApplication  : Started AccountApplication in 2.96 seconds (process running for 3.124)
+
+2025-03-09T20:53:50.497+01:00 DEBUG 40498 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+
+2025-03-09T20:53:50.498+01:00 DEBUG 40498 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+
+2025-03-09T20:54:14.693+01:00  INFO 40498 --- [http-nio-9001-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+
+2025-03-09T20:54:14.694+01:00  INFO 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+
+2025-03-09T20:54:14.694+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+
+2025-03-09T20:54:14.694+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+
+2025-03-09T20:54:14.694+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+
+2025-03-09T20:54:14.696+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@236a434d
+
+2025-03-09T20:54:14.697+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@3d701e07
+
+2025-03-09T20:54:14.697+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+
+2025-03-09T20:54:14.697+01:00  INFO 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+
+2025-03-09T20:54:14.816+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:54:14.893+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:54:15.941+01:00 DEBUG 40498 --- [http-nio-9001-exec-2] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:54:16.077+01:00 DEBUG 40498 --- [http-nio-9001-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.balance,a1_0.created,a1_0.transaction_limit,a1_0.updated,a1_0.user_id,a1_0.username,a1_0.version from account a1_0 where a1_0.id=?
+
+2025-03-09T20:54:16.077+01:00 TRACE 40498 --- [http-nio-9001-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:54:16.109+01:00 DEBUG 40498 --- [http-nio-9001-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:54:21.394+01:00 DEBUG 40498 --- [http-nio-9001-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:54:21.402+01:00 DEBUG 40498 --- [http-nio-9001-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.balance,a1_0.created,a1_0.transaction_limit,a1_0.updated,a1_0.user_id,a1_0.username,a1_0.version from account a1_0 where a1_0.id=?
+
+2025-03-09T20:54:21.402+01:00 TRACE 40498 --- [http-nio-9001-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:54:21.409+01:00 DEBUG 40498 --- [http-nio-9001-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:54:26.076+01:00  WARN 40498 --- [AsyncReporter{ZipkinRestTemplateSender{http://localhost:9411/api/v2/spans}}] z.r.i.AsyncReporter$BoundedAsyncReporter : Spans were dropped due to exceptions. All subsequent errors will be logged at FINE level.
+
+2025-03-09T20:54:26.077+01:00  WARN 40498 --- [AsyncReporter{ZipkinRestTemplateSender{http://localhost:9411/api/v2/spans}}] z.r.i.AsyncReporter$BoundedAsyncReporter : Dropped 3 spans due to ResourceAccessException(I/O error on POST request for "http://localhost:9411/api/v2/spans": null)
+
+org.springframework.web.client.ResourceAccessException: I/O error on POST request for "http://localhost:9411/api/v2/spans": null
+	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:925) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:905) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:840) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:701) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.boot.actuate.autoconfigure.tracing.zipkin.ZipkinRestTemplateSender.postSpans(ZipkinRestTemplateSender.java:50) ~[spring-boot-actuator-autoconfigure-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.autoconfigure.tracing.zipkin.HttpSender.postSpans(HttpSender.java:69) ~[spring-boot-actuator-autoconfigure-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.autoconfigure.tracing.zipkin.HttpSender.postSpans(HttpSender.java:41) ~[spring-boot-actuator-autoconfigure-3.4.3.jar:3.4.3]
+	at zipkin2.reporter.BaseHttpSender.send(BaseHttpSender.java:123) ~[zipkin-reporter-3.4.3.jar:na]
+	at zipkin2.reporter.internal.AsyncReporter$BoundedAsyncReporter.flush(AsyncReporter.java:266) ~[zipkin-reporter-3.4.3.jar:na]
+	at zipkin2.reporter.internal.AsyncReporter$Flusher.run(AsyncReporter.java:352) ~[zipkin-reporter-3.4.3.jar:na]
+	at java.base/java.lang.Thread.run(Thread.java:1575) ~[na:na]
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.common.Utils.toConnectException(Utils.java:1082) ~[java.net.http:na]
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:227) ~[java.net.http:na]
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.checkRetryConnect(PlainHttpConnection.java:280) ~[java.net.http:na]
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.lambda$connectAsync$2(PlainHttpConnection.java:238) ~[java.net.http:na]
+	at java.base/java.util.concurrent.CompletableFuture.uniHandle(CompletableFuture.java:978) ~[na:na]
+	at java.base/java.util.concurrent.CompletableFuture$UniHandle.tryFire(CompletableFuture.java:955) ~[na:na]
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:554) ~[na:na]
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1817) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
+	... 1 common frames omitted
+Caused by: java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpen(SocketChannelImpl.java:204) ~[na:na]
+	at java.base/sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:958) ~[na:na]
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.lambda$connectAsync$1(PlainHttpConnection.java:210) ~[java.net.http:na]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571) ~[na:na]
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:212) ~[java.net.http:na]
+	... 9 common frames omitted
+
+
+2025-03-09T20:55:10.402+01:00 DEBUG 40498 --- [http-nio-9001-exec-10] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:55:10.413+01:00 DEBUG 40498 --- [http-nio-9001-exec-10] org.hibernate.SQL                        : select a1_0.id,a1_0.balance,a1_0.created,a1_0.transaction_limit,a1_0.updated,a1_0.user_id,a1_0.username,a1_0.version from account a1_0 where a1_0.id=?
+
+2025-03-09T20:55:10.414+01:00 TRACE 40498 --- [http-nio-9001-exec-10] org.hibernate.orm.jdbc.bind              : binding parameter (1:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:55:10.421+01:00 DEBUG 40498 --- [http-nio-9001-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:55:13.543+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:55:13.568+01:00 DEBUG 40498 --- [http-nio-9001-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:55:21.219+01:00 DEBUG 40498 --- [http-nio-9001-exec-2] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:55:21.306+01:00 DEBUG 40498 --- [http-nio-9001-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.balance,a1_0.created,a1_0.transaction_limit,a1_0.updated,a1_0.user_id,a1_0.username,a1_0.version from account a1_0
+
+2025-03-09T20:55:21.314+01:00 DEBUG 40498 --- [http-nio-9001-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:56:33.043+01:00 DEBUG 40498 --- [http-nio-9001-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:56:33.068+01:00 DEBUG 40498 --- [http-nio-9001-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:57:08.867+01:00 DEBUG 40498 --- [http-nio-9001-exec-4] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:57:08.910+01:00 DEBUG 40498 --- [http-nio-9001-exec-4] org.hibernate.SQL                        : insert into account (balance,created,transaction_limit,updated,user_id,username,version,id) values (?,?,?,?,?,?,?,?)
+
+2025-03-09T20:57:08.911+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (1:NUMERIC) <- [null]
+
+2025-03-09T20:57:08.911+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (2:TIMESTAMP) <- [2025-03-09T20:57:08.904016]
+
+2025-03-09T20:57:08.912+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (3:INTEGER) <- [0]
+
+2025-03-09T20:57:08.912+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [2025-03-09T20:57:08.904174]
+
+2025-03-09T20:57:08.912+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (5:UUID) <- [00000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:57:08.912+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (6:VARCHAR) <- [admin]
+
+2025-03-09T20:57:08.912+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (7:INTEGER) <- [0]
+
+2025-03-09T20:57:08.912+01:00 TRACE 40498 --- [http-nio-9001-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter (8:UUID) <- [1193d1a4-53a2-4db1-9d4b-d287490c1f00]
+
+2025-03-09T20:57:08.923+01:00  WARN 40498 --- [http-nio-9001-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23502
+
+2025-03-09T20:57:08.923+01:00 ERROR 40498 --- [http-nio-9001-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: null value in column "rate_of_interest" of relation "account" violates not-null constraint
+  Detail: Failing row contains (1193d1a4-53a2-4db1-9d4b-d287490c1f00, 0, null, null, null, null, null, 0, 2025-03-09 20:57:08.904016, 2025-03-09 20:57:08.904174, 00000000-0000-0000-0000-000000000000, admin).
+
+2025-03-09T20:57:08.938+01:00 ERROR 40498 --- [http-nio-9001-exec-4] s.g.e.ExceptionResolversExceptionHandler : Unresolved DataIntegrityViolationException for executionId 31c1a9d5-9b94-c9e3-b509-bbb3da172c9b
+
+org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: null value in column "rate_of_interest" of relation "account" violates not-null constraint
+  Detail: Failing row contains (1193d1a4-53a2-4db1-9d4b-d287490c1f00, 0, null, null, null, null, null, 0, 2025-03-09 20:57:08.904016, 2025-03-09 20:57:08.904174, 00000000-0000-0000-0000-000000000000, admin).] [insert into account (balance,created,transaction_limit,updated,user_id,username,version,id) values (?,?,?,?,?,?,?,?)]; SQL [insert into account (balance,created,transaction_limit,updated,user_id,username,version,id) values (?,?,?,?,?,?,?,?)]; constraint [rate_of_interest" of relation "account]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290) ~[spring-orm-6.2.3.jar:6.2.3]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241) ~[spring-orm-6.2.3.jar:6.2.3]
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:566) ~[spring-orm-6.2.3.jar:6.2.3]
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:795) ~[spring-tx-6.2.3.jar:6.2.3]
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:758) ~[spring-tx-6.2.3.jar:6.2.3]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:698) ~[spring-tx-6.2.3.jar:6.2.3]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:416) ~[spring-tx-6.2.3.jar:6.2.3]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-6.2.3.jar:6.2.3]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar:6.2.3]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:727) ~[spring-aop-6.2.3.jar:6.2.3]
+	at com.gentlecorp.account.service.WriteService$$SpringCGLIB$$0.create(<generated>) ~[classes/:na]
+	at com.gentlecorp.account.controller.MutationController.createAccount(MutationController.java:60) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.graphql.data.method.InvocableHandlerMethodSupport.doInvoke(InvocableHandlerMethodSupport.java:117) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.graphql.data.method.annotation.support.DataFetcherHandlerMethod.validateAndInvoke(DataFetcherHandlerMethod.java:142) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.graphql.data.method.annotation.support.DataFetcherHandlerMethod.invoke(DataFetcherHandlerMethod.java:125) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.graphql.data.method.annotation.support.DataFetcherHandlerMethod.invoke(DataFetcherHandlerMethod.java:103) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.graphql.data.method.annotation.support.AnnotatedControllerConfigurer$SchemaMappingDataFetcher.get(AnnotatedControllerConfigurer.java:520) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.graphql.execution.ContextDataFetcherDecorator.lambda$get$0(ContextDataFetcherDecorator.java:87) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at io.micrometer.context.ContextSnapshot.lambda$wrap$1(ContextSnapshot.java:106) ~[context-propagation-1.1.2.jar:1.1.2]
+	at org.springframework.graphql.execution.ContextDataFetcherDecorator.get(ContextDataFetcherDecorator.java:87) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.graphql.observation.GraphQlObservationInstrumentation.lambda$instrumentDataFetcher$3(GraphQlObservationInstrumentation.java:151) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at graphql.execution.ExecutionStrategy.invokeDataFetcher(ExecutionStrategy.java:533) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.ExecutionStrategy.fetchField(ExecutionStrategy.java:497) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.ExecutionStrategy.fetchField(ExecutionStrategy.java:438) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.ExecutionStrategy.resolveFieldWithInfo(ExecutionStrategy.java:397) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.ExecutionStrategy.resolveField(ExecutionStrategy.java:361) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.AsyncSerialExecutionStrategy.lambda$execute$1(AsyncSerialExecutionStrategy.java:57) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.Async.eachSequentiallyPolymorphicImpl(Async.java:329) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.Async.eachSequentially(Async.java:317) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.AsyncSerialExecutionStrategy.execute(AsyncSerialExecutionStrategy.java:52) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.Execution.executeOperation(Execution.java:181) ~[graphql-java-22.3.jar:na]
+	at graphql.execution.Execution.execute(Execution.java:117) ~[graphql-java-22.3.jar:na]
+	at graphql.GraphQL.execute(GraphQL.java:546) ~[graphql-java-22.3.jar:na]
+	at graphql.GraphQL.lambda$parseValidateAndExecute$13(GraphQL.java:476) ~[graphql-java-22.3.jar:na]
+	at java.base/java.util.concurrent.CompletableFuture.uniComposeStage(CompletableFuture.java:1231) ~[na:na]
+	at java.base/java.util.concurrent.CompletableFuture.thenCompose(CompletableFuture.java:2385) ~[na:na]
+	at graphql.GraphQL.parseValidateAndExecute(GraphQL.java:471) ~[graphql-java-22.3.jar:na]
+	at graphql.GraphQL.lambda$executeAsync$9(GraphQL.java:429) ~[graphql-java-22.3.jar:na]
+	at java.base/java.util.concurrent.CompletableFuture.uniComposeStage(CompletableFuture.java:1231) ~[na:na]
+	at java.base/java.util.concurrent.CompletableFuture.thenCompose(CompletableFuture.java:2385) ~[na:na]
+	at graphql.GraphQL.executeAsync(GraphQL.java:418) ~[graphql-java-22.3.jar:na]
+	at org.springframework.graphql.execution.DefaultExecutionGraphQlService.lambda$execute$4(DefaultExecutionGraphQlService.java:106) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at reactor.core.publisher.MonoDeferContextual.subscribe(MonoDeferContextual.java:47) ~[reactor-core-3.7.3.jar:3.7.3]
+	at reactor.core.publisher.Mono.subscribe(Mono.java:4576) ~[reactor-core-3.7.3.jar:3.7.3]
+	at reactor.core.publisher.Mono.subscribeWith(Mono.java:4641) ~[reactor-core-3.7.3.jar:3.7.3]
+	at reactor.core.publisher.Mono.toFuture(Mono.java:5153) ~[reactor-core-3.7.3.jar:3.7.3]
+	at org.springframework.graphql.server.webmvc.GraphQlHttpHandler.prepareResponse(GraphQlHttpHandler.java:82) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.graphql.server.webmvc.AbstractGraphQlHttpHandler.handleRequest(AbstractGraphQlHttpHandler.java:133) ~[spring-graphql-1.3.4.jar:1.3.4]
+	at org.springframework.web.servlet.function.support.HandlerFunctionAdapter.handle(HandlerFunctionAdapter.java:108) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.36.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.36.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.AbstractRequestLoggingFilter.doFilterInternal(AbstractRequestLoggingFilter.java:289) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter.doFilterInternal(BearerTokenAuthenticationFilter.java:145) ~[spring-security-oauth2-resource-server-6.4.3.jar:6.4.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.4.3.jar:6.4.3]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238) ~[spring-security-config-6.4.3.jar:6.4.3]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:114) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at java.base/java.lang.Thread.run(Thread.java:1575) ~[na:na]
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [ERROR: null value in column "rate_of_interest" of relation "account" violates not-null constraint
+  Detail: Failing row contains (1193d1a4-53a2-4db1-9d4b-d287490c1f00, 0, null, null, null, null, null, 0, 2025-03-09 20:57:08.904016, 2025-03-09 20:57:08.904174, 00000000-0000-0000-0000-000000000000, admin).] [insert into account (balance,created,transaction_limit,updated,user_id,username,version,id) values (?,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.performNonBatchedMutation(AbstractMutationExecutor.java:134) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:104) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:110) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:632) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:372) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1442) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2341) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:2020) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:102) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562) ~[spring-orm-6.2.3.jar:6.2.3]
+	... 171 common frames omitted
+Caused by: org.postgresql.util.PSQLException: ERROR: null value in column "rate_of_interest" of relation "account" violates not-null constraint
+  Detail: Failing row contains (1193d1a4-53a2-4db1-9d4b-d287490c1f00, 0, null, null, null, null, null, 0, 2025-03-09 20:57:08.904016, 2025-03-09 20:57:08.904174, 00000000-0000-0000-0000-000000000000, admin).
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.5.jar:42.7.5]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.5.jar:42.7.5]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.5.jar:42.7.5]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:517) ~[postgresql-42.7.5.jar:42.7.5]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:434) ~[postgresql-42.7.5.jar:42.7.5]
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194) ~[postgresql-42.7.5.jar:42.7.5]
+	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:155) ~[postgresql-42.7.5.jar:42.7.5]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61) ~[HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java) ~[HikariCP-5.1.0.jar:na]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194) ~[hibernate-core-7.0.0.Alpha2.jar:7.0.0.Alpha2]
+	... 192 common frames omitted
+
+
+2025-03-09T20:57:08.953+01:00 DEBUG 40498 --- [http-nio-9001-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:58:11.409+01:00 DEBUG 40498 --- [http-nio-9001-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:58:11.431+01:00 DEBUG 40498 --- [http-nio-9001-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:58:21.575+01:00 DEBUG 40498 --- [http-nio-9001-exec-6] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:58:21.594+01:00 DEBUG 40498 --- [http-nio-9001-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:59:28.267+01:00 DEBUG 40498 --- [http-nio-9001-exec-7] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:59:28.288+01:00 DEBUG 40498 --- [http-nio-9001-exec-7] org.hibernate.SQL                        : select a1_0.id,a1_0.balance,a1_0.created,a1_0.transaction_limit,a1_0.updated,a1_0.user_id,a1_0.username,a1_0.version from account a1_0 where a1_0.id=?
+
+2025-03-09T20:59:28.288+01:00 TRACE 40498 --- [http-nio-9001-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:59:28.294+01:00 ERROR 40498 --- [http-nio-9001-exec-7] c.gentlecorp.account.util.VersionUtils   : Version is ahead of the current version
+
+2025-03-09T20:59:28.299+01:00 ERROR 40498 --- [http-nio-9001-exec-7] c.g.a.controller.MutationController      : onVersionAhead: Die angegebene Version 1 ist voraus und noch nicht gültig.
+
+2025-03-09T20:59:28.302+01:00 DEBUG 40498 --- [http-nio-9001-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T20:59:36.242+01:00 DEBUG 40498 --- [http-nio-9001-exec-8] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T20:59:36.251+01:00 DEBUG 40498 --- [http-nio-9001-exec-8] org.hibernate.SQL                        : select a1_0.id,a1_0.balance,a1_0.created,a1_0.transaction_limit,a1_0.updated,a1_0.user_id,a1_0.username,a1_0.version from account a1_0 where a1_0.id=?
+
+2025-03-09T20:59:36.251+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:59:36.268+01:00 DEBUG 40498 --- [http-nio-9001-exec-8] org.hibernate.SQL                        : update account set balance=?,created=?,transaction_limit=?,updated=?,user_id=?,username=?,version=? where id=? and version=?
+
+2025-03-09T20:59:36.269+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:NUMERIC) <- [345]
+
+2025-03-09T20:59:36.270+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (2:TIMESTAMP) <- [2022-01-31T00:00]
+
+2025-03-09T20:59:36.270+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (3:INTEGER) <- [0]
+
+2025-03-09T20:59:36.270+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [2025-03-09T20:59:36.263442]
+
+2025-03-09T20:59:36.270+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (5:UUID) <- [00000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:59:36.270+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (6:VARCHAR) <- [admin]
+
+2025-03-09T20:59:36.270+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (7:INTEGER) <- [1]
+
+2025-03-09T20:59:36.271+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (8:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T20:59:36.271+01:00 TRACE 40498 --- [http-nio-9001-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (9:INTEGER) <- [0]
+
+2025-03-09T20:59:36.284+01:00 DEBUG 40498 --- [http-nio-9001-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T21:00:28.184+01:00 DEBUG 40498 --- [http-nio-9001-exec-9] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T21:00:28.201+01:00 DEBUG 40498 --- [http-nio-9001-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T21:00:39.808+01:00 DEBUG 40498 --- [http-nio-9001-exec-10] o.s.web.servlet.DispatcherServlet        : POST "/graphql", parameters={}
+
+2025-03-09T21:00:39.819+01:00 DEBUG 40498 --- [http-nio-9001-exec-10] org.hibernate.SQL                        : select a1_0.id,a1_0.balance,a1_0.created,a1_0.transaction_limit,a1_0.updated,a1_0.user_id,a1_0.username,a1_0.version from account a1_0 where a1_0.id=?
+
+2025-03-09T21:00:39.820+01:00 TRACE 40498 --- [http-nio-9001-exec-10] org.hibernate.orm.jdbc.bind              : binding parameter (1:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T21:00:39.831+01:00 DEBUG 40498 --- [http-nio-9001-exec-10] org.hibernate.SQL                        : delete from account where id=? and version=?
+
+2025-03-09T21:00:39.831+01:00 TRACE 40498 --- [http-nio-9001-exec-10] org.hibernate.orm.jdbc.bind              : binding parameter (1:UUID) <- [30000000-0000-0000-0000-000000000000]
+
+2025-03-09T21:00:39.831+01:00 TRACE 40498 --- [http-nio-9001-exec-10] org.hibernate.orm.jdbc.bind              : binding parameter (2:INTEGER) <- [1]
+
+2025-03-09T21:00:39.840+01:00 DEBUG 40498 --- [http-nio-9001-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+
+2025-03-09T21:00:52.365+01:00 DEBUG 40498 --- [SpringApplicationShutdownHook] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed from ACCEPTING_TRAFFIC to REFUSING_TRAFFIC
+
+2025-03-09T21:00:52.373+01:00  INFO 40498 --- [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+
+2025-03-09T21:00:54.387+01:00  INFO 40498 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+
+2025-03-09T21:00:54.398+01:00  INFO 40498 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+
+2025-03-09T21:00:54.404+01:00  INFO 40498 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+
+2025-03-09T21:00:54.405+01:00  INFO 40498 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+

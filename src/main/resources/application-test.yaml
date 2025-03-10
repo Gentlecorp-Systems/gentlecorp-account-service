@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+# Applikationsspezifische Einstellungen
+app:
+  server:
+    port: ${TEST_SERVER_PORT}
+  postgres:
+    url: jdbc:postgresql://${POSTGRES_SQL_HOST}:${POSTGRES_SQL_PORT}/${POSTGRES_SQL_TEST_DB}
+    username: ${POSTGRES_SQL_USERNAME}
+    password: ${POSTGRES_SQL_PASSWORD}
+  http2:
+   enabled: false
+  ssl:
+   enabled: false

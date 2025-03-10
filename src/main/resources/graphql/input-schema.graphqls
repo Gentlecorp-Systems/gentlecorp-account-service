@@ -1,0 +1,12 @@
+
+
+input CreateAccountInput {
+    transactionLimit: Int
+    userId: ID!
+    username: String!
+}
+
+input UpdateAccountInput {
+    transactionLimit: Int
+    balance: Int
+}

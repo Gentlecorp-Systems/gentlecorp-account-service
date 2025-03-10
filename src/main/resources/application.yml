@@ -1,0 +1,158 @@
+# Gemeinsame Konfiguration
+server:
+  http2:
+    enabled: ${app.http2.enabled}
+  ssl:
+    enabled: ${app.ssl.enabled}
+    bundle: microservice
+  port: ${app.server.port}
+  compression:
+    enabled: true
+    mime-types: application/hal+json
+    min-response-size: 2KB
+  error:
+    whitelabel:
+      enabled: false
+  shutdown: graceful
+
+# Spring Boot Einstellungen
+spring:
+  checkpoint.restore: onRefresh
+  datasource:
+    url: ${app.postgres.url}
+    username: ${app.postgres.username}
+    password: ${app.postgres.password}
+  flyway:
+#    locations: classpath:db/migration/{vendor}
+    locations: classpath:db/migration
+    create-schemas: false
+  jpa:
+    hibernate:
+      naming.physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    open-in-view: false
+    properties:
+      hibernate:
+       #default_schema: kunde
+       jdbc:
+         time_zone: Europe/Berlin
+         batch_versioned_data: true
+         # fuer Oracle: der Treiber teilt bei SELECT das Resultat in standardmaessig maximal 10 Datensaetze auf
+         #fetch_size: 10
+       order_inserts: true
+       order_updates: true
+       session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
+       xml_mapping_enabled: false
+      jakarta.persistence:
+       sharedCache.mode: ENABLE_SELECTIVE
+       validation.mode: NONE
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      #value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        spring:
+          json:
+            type:
+              mapping:
+                account:com.gentlecorp.customer.model.dto.AccountDTO,
+                shoppingCart:com.gentlecorp.customer.model.dto.ShoppingCartDTO
+  graphql:
+    graphiql:
+      enabled: true
+    schema:
+      printer:
+        enabled: true
+
+  profiles:
+    active: ${app.env}
+  application:
+    name: account
+  mail:
+    host: localhost
+    port: 5025
+  #  mail:
+  #    host: smtp.acme.com
+  #    port: 25
+  #    #protocol: smtp
+  #    properties.mail:
+  #      debug: false
+  #      smtp:
+  #        auth: false
+  #        starttls.enable: false
+  #    # Mailserver des IZ
+  #    #host: smtp.h-ka.de
+  #    #port: 23
+  #    #username: nnvv0011
+  #    #password: blabla
+  #    # GMail
+  #    #host: smtp.gmail.com
+  #    #port: 587
+  #    #properties.mail.smtp.starttls.enable: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${app.keycloak.host}:${app.keycloak.port}/auth/realms/${app.keycloak.realm}
+
+# Applikationsspezifische Einstellungen
+app:
+  mail:
+    from: Theo Test <theo@test.de>
+    to: Maxi Musterfrau <maxi.musterfrau@test.de>
+  env: ${ACTIVE_PROFILE:dev}
+  password: p
+  keycloak:
+    client-secret: ${KC_SERVICE_SECRET}
+    host: ${KC_SERVICE_HOST}
+    port: ${KC_SERVICE_PORT}
+    realm: ${KC_SERVICE_REALM}
+    client-id: ${KC_SERVICE_CLIENT_ID}
+  mongo:
+    uri: ${MONGODB_URI}
+# Logging-Konfiguration
+logging:
+  file.name: ./tmp/application.log
+  logback:
+    rollingpolicy:
+      file-name-pattern: ${logging.file.name}.%d{yyyy-MM-dd}.%i.gz
+      max-file-size: 100KB
+      max-history: 3
+  pattern:
+    console: >
+      %clr(%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}){faint} %clr(%5level) %clr(${PID:- }){magenta}
+      %clr(---){faint} %clr([%15.15thread]){faint} %clr(%-40.40logger{39}){cyan}
+      %clr(:){faint} %msg%n%wEx
+    file: >
+      %date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5level ${PID:- } --- [%thread]
+      %-40.40logger{39} : %m%n%wEx
+  level:
+    com.gentlecorp.customer: trace
+    org.apache.catalina.loader.WebappClassLoaderBase: info
+    org.springframework.boot.availability.ApplicationAvailabilityBean: debug
+    org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener: warn
+    org.springframework.security.core.userdetails.User: error
+    org.springframework.security.web.server.authorization.AuthorizationWebFilter: trace
+    org.springframework.web.reactive.function.client.ExchangeFunctions: trace
+    org.springframework.web.service.invoker.PathVariableArgumentResolver: trace
+    org.springframework.web.service.invoker.RequestHeaderArgumentResolver: trace
+    org.springframework.web.servlet.DispatcherServlet: debug
+    org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor: debug
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: debug
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: error
+    io.micrometer.observation.contextpropagation.ObservationThreadLocalAccessor: error
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.SQL_SLOW: warn
+    org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor: debug
+    io.qameta.allure.AllureLifecycle: fatal
+    org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils: warn
+    org.springframework.boot.test.context.SpringBootTestContextBootstrapper: warn
+    org.springframework.test.context.support.AbstractContextLoader: warn
+    org.springframework.test.context.support.AnnotationConfigContextLoaderUtils: warn
+    org.springframework.test.context.support.DefaultTestContextBootstrapper: warn
+    org.springframework.data.mongodb: debug
+    org.junit.jupiter: warn
+
+    # org.springframework.graphql: debug
