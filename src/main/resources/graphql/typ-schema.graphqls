@@ -4,6 +4,10 @@ type Account {
     id: ID
     version:  Int
     balance: Float
+    rateOfInterest: Float
+    category: AccountType
+    state: StatusType
+    overdraftLimit: Float
     transactionLimit: Int
     created: String
     updated: String
