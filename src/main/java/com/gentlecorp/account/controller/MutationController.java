@@ -4,6 +4,7 @@ import com.gentlecorp.account.exception.AccessForbiddenException;
 import com.gentlecorp.account.exception.NotFoundException;
 import com.gentlecorp.account.exception.VersionAheadException;
 import com.gentlecorp.account.exception.VersionOutdatedException;
+import com.gentlecorp.account.model.dto.AccountDTO;
 import com.gentlecorp.account.model.entity.Account;
 import com.gentlecorp.account.model.input.CreateAccountInput;
 import com.gentlecorp.account.model.input.UpdateAccountInput;
@@ -26,6 +27,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -90,6 +92,18 @@ public class MutationController {
     final var user = (CustomUserDetails) authentication.getPrincipal();
     writeService.deleteById(id, version, user);
     return true;
+  }
+
+
+  @MutationMapping("updateBalance")
+  public BigDecimal updateBalance(
+      @Argument final UUID id,
+      @Argument final BigDecimal balance
+  ) {
+    log.debug("deleteAccount: id={}, balance={}", id, balance);
+    final var newBalance = writeService.updateBalance(id, balance);
+    log.debug("updateBalance: balance={}", newBalance);
+    return newBalance;
   }
 
   @GraphQlExceptionHandler

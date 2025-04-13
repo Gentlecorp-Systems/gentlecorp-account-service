@@ -165,6 +165,16 @@ public class WriteService {
     accountRepository.delete(accountDb);
   }
 
+  public BigDecimal updateBalance(final UUID id, final BigDecimal balance) {
+    log.debug("updateBalance: id={}, balance={}", id, balance);
+    final var accountDb = accountRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    final var newBalance = balance.add(accountDb.getBalance());
+    accountDb.setBalance(newBalance);
+    accountRepository.save(accountDb);
+    log.debug("updateBalance: account={}", accountDb);
+    return newBalance;
+  }
+
 //  public void close(final UUID accountId, final int version, final Jwt jwt) {
 //    log.debug("close: accountId={}, versionInt={}", accountId, version);
 //    final var account = accountRepository.findById(accountId).orElseThrow(NotFoundException::new);

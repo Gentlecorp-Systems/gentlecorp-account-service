@@ -22,10 +22,12 @@ spring:
     url: ${app.postgres.url}
     username: ${app.postgres.username}
     password: ${app.postgres.password}
+
   flyway:
 #    locations: classpath:db/migration/{vendor}
     locations: classpath:db/migration
     create-schemas: false
+
   jpa:
     hibernate:
       naming.physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
@@ -45,8 +47,23 @@ spring:
       jakarta.persistence:
        sharedCache.mode: ENABLE_SELECTIVE
        validation.mode: NONE
+
   kafka:
     bootstrap-servers: localhost:9092
+
+    consumer:
+      group-id: gentlecorp
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            type:
+              mapping:
+                # payment:com.gentlecorp.transaction.model.dto.TransactionDTO,
+                balance:com.gentlecorp.account.model.dto.BalanceDTO
+
+
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -57,7 +74,8 @@ spring:
             type:
               mapping:
                 account:com.gentlecorp.customer.model.dto.AccountDTO,
-                shoppingCart:com.gentlecorp.customer.model.dto.ShoppingCartDTO
+                shoppingCart:com.gentlecorp.customer.model.dto.ShoppingCartDTO,
+
   graphql:
     graphiql:
       enabled: true
@@ -109,8 +127,6 @@ app:
     port: ${KC_SERVICE_PORT}
     realm: ${KC_SERVICE_REALM}
     client-id: ${KC_SERVICE_CLIENT_ID}
-  mongo:
-    uri: ${MONGODB_URI}
 # Logging-Konfiguration
 logging:
   file.name: ./tmp/application.log

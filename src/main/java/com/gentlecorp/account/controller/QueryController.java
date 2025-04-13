@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -25,13 +24,24 @@ public class QueryController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'SUPREME', 'ELITE', 'BASIC')")
     Account getAccountById(
         @Argument final UUID id,
-        @Argument final UUID userId,
         final Authentication authentication
     ) {
-        log.debug("getAccountById: id={}, userId={}", id, userId);
+        log.debug("getAccountById: id={}", id);
         final var user = (CustomUserDetails) authentication.getPrincipal();
         final var Account = readService.findById(id, user);
         log.debug("getAccountById: Account={}", Account);
+        return Account;
+    }
+
+    @QueryMapping("accountsByUsername")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'SUPREME', 'ELITE', 'BASIC')")
+    Collection<Account> getAccountByUsername(
+        final Authentication authentication
+    ) {
+        log.debug("getAccountByUsername");
+        final var user = (CustomUserDetails) authentication.getPrincipal();
+        final var Account = readService.findByUsername(user);
+        log.debug("getAccountByUsername: Account={}", Account);
         return Account;
     }
 

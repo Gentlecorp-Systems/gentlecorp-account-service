@@ -27,6 +27,9 @@ public class AccountApplication {
 	public static void main(String[] args) {
 		new Env();
 		SpringApplication.run(AccountApplication.class, args);
+//		final var app = new SpringApplication(AccountApplication.class);
+//		app.setBanner((_, _, out) -> out.println(TEXT));
+//		app.run(args);
 	}
 
 	@Bean
@@ -38,5 +41,4 @@ public class AccountApplication {
 	FederationSchemaFactory federationSchemaFactory() {
 		return new FederationSchemaFactory();
 	}
-
 }

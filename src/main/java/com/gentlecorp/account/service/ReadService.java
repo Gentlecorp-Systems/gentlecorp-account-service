@@ -4,6 +4,7 @@ import com.gentlecorp.account.exception.AccessForbiddenException;
 import com.gentlecorp.account.exception.NotFoundException;
 import com.gentlecorp.account.model.entity.Account;
 import com.gentlecorp.account.repository.AccountRepository;
+import com.gentlecorp.account.security.CustomUserDetails;
 import com.gentlecorp.account.security.enums.RoleType;
 import io.micrometer.observation.annotation.Observed;
 import lombok.NonNull;
@@ -78,5 +79,16 @@ public class ReadService {
         }
 
         return AccountRepository.findAll();
+    }
+
+    public @NonNull Collection<Account> findByUsername(final CustomUserDetails user) {
+        log.debug("findByUsername: username={}", user.getUsername());
+
+        final var accounts = AccountRepository.findByUsername(user.getUsername());
+        if (accounts.isEmpty()) {
+            throw new AccessForbiddenException(user.getUsername(),null);
+        }
+        return accounts;
+
     }
 }

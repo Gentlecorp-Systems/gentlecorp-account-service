@@ -7,7 +7,8 @@ schema {
 # Q U E R I E S
 ###############################################################################################
 type Query {
-    account(id: ID!, userId: ID!): Account!
+    account(id: ID!): Account!
+    accountsByUsername: [Account!]
     accounts: [Account!]
 }
 ###############################################################################################
@@ -16,5 +17,6 @@ type Query {
 type Mutation {
     createAccount(input: CreateAccountInput!): ID!
     updateAccount(input: UpdateAccountInput!, id: ID!, version: Int!): Account!
+    updateBalance(id: ID!, balance: Float!): Float
     deleteAccount(id: ID!, version: Int!): Boolean!
 }
