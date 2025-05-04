@@ -40,26 +40,6 @@ public class CustomUserDetails implements UserDetails {
         return null; // Da wir OAuth2 verwenden, gibt es kein Passwort
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
     public String getToken() {
         return jwt.getTokenValue();
     }

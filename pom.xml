@@ -16,29 +16,29 @@
 
 
 	<organization>
-		<name>Hochschule Karlsruhe</name>
-		<url>https://www.h-ka.de</url>
+		<name>Gentlecorp-Systems</name>
+		<url>https://www.gentlecorp.com</url>
 	</organization>
-	<description>Backend-Service für das dynamische Rollen- und Funktionsmanagement mit Camunda Workflow-Integration</description>
-	<url>https://www.flowcraft-ag.de/products/rolemapper</url>
+	<description></description>
+	<url></url>
 	<developers>
 		<developer>
-			<id>flowcraft-team</id>
-			<name>FlowCraft AG</name>
+			<id></id>
+			<name></name>
 			<email>${email}</email>
-			<organization>FlowCraft AG</organization>
-			<organizationUrl>https://www.flowcraft-ag.de</organizationUrl>
+			<organization>Gentlecorp</organization>
+			<organizationUrl></organizationUrl>
 		</developer>
 	</developers>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/acme/kunde/issues</url>
+		<url></url>
 	</issueManagement>
 	<scm>
-		<connection>scm:git:git://github.com/flowcraft-ag/rolemapper.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:flowcraft-ag/rolemapper.git</developerConnection>
+		<connection></connection>
+		<developerConnection></developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/flowcraft-ag/rolemapper</url>
+		<url></url>
 	</scm>
 
 
@@ -54,6 +54,9 @@
 		<federation-graphql-java-support.version>5.3.0</federation-graphql-java-support.version>
 		<enable.preview>--enable-preview</enable.preview>
 		<hibernate-processor.version>7.0.0.Alpha2</hibernate-processor.version>
+
+		<jackson-databind>2.19.0-rc2</jackson-databind>
+		<jackson-module-parameter-names>2.19.0-rc2</jackson-module-parameter-names>
 	</properties>
 	<dependencies>
 		<!--___________________________________SPRING BOOT STARTER__________________________________________________ -->
@@ -147,6 +150,16 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-databind}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-parameter-names</artifactId>
+			<version>${jackson-databind}</version>
+		</dependency>
 
 		<!--__________________________________________WICHTIGE EXTRAS_______________________________________________ -->
 		<dependency>
@@ -232,19 +245,50 @@
 			<version>${mapstruct.version}</version>
 		</dependency>
 		<!--____________________________________________MONITORING__________________________________________________ -->
+		<!-- https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-exporter-otlp -->
+		<dependency>
+			<groupId>io.opentelemetry</groupId>
+			<artifactId>opentelemetry-exporter-otlp</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-observation -->
 		<dependency>
 			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-tracing-bridge-brave</artifactId>
+			<artifactId>micrometer-observation</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing -->
 		<dependency>
-			<groupId>io.zipkin.reporter2</groupId>
-			<artifactId>zipkin-reporter-brave</artifactId>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-tracing</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing-bridge-otel -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-tracing-bridge-otel</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>org.springframework.cloud</groupId>-->
 <!--			<artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>-->
 <!--		</dependency>-->
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing-bom -->
+			<dependency>
+				<groupId>io.micrometer</groupId>
+				<artifactId>micrometer-tracing-bom</artifactId>
+				<version>1.5.0-RC1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 	<build>
 		<plugins>

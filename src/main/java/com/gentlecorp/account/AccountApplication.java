@@ -1,7 +1,9 @@
 package com.gentlecorp.account;
 
+import com.gentlecorp.account.config.AppProperties;
 import com.gentlecorp.account.config.ApplicationConfig;
 import com.gentlecorp.account.dev.DevConfig;
+import com.gentlecorp.account.utils.Env;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.graphql.GraphQlSourceBuilderCustomizer;
@@ -16,7 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication(proxyBeanMethods = false)
 @Import({ApplicationConfig.class, DevConfig.class})
-@EnableConfigurationProperties({KeycloakProps.class})
+@EnableConfigurationProperties({AppProperties.class})
 @EnableJpaRepositories
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -33,7 +35,7 @@ public class AccountApplication {
 	}
 
 	@Bean
-	public GraphQlSourceBuilderCustomizer customizer(FederationSchemaFactory factory) {
+	public GraphQlSourceBuilderCustomizer graphQlSourceCustomizer(FederationSchemaFactory factory) {
 		return builder -> builder.schemaFactory(factory::createGraphQLSchema);
 	}
 

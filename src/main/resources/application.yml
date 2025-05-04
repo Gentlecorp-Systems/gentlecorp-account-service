@@ -52,29 +52,28 @@ spring:
     bootstrap-servers: localhost:9092
 
     consumer:
-      group-id: gentlecorp
+      group-id: ${app.groupId}
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
         spring:
           json:
             type:
-              mapping:
-                # payment:com.gentlecorp.transaction.model.dto.TransactionDTO,
-                balance:com.gentlecorp.account.model.dto.BalanceDTO
-
-
+              mapping: >
+                balance: com.gentlecorp.account.models.dto.BalanceDTO,
+                com.gentlecorp.person.models.event.DeleteAccountDTO:com.gentlecorp.account.models.event.DeleteAccountDTO,
+                com.gentlecorp.person.models.event.CreateAccountDTO:com.gentlecorp.account.models.event.CreateAccountDTO
+            trusted:
+              packages:
+                - com.gentlecorp.person.models.event
+          deserializer:
+            value:
+              delegate:
+                class: org.springframework.kafka.support.serializer.JsonDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # value-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      #value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      properties:
-        spring:
-          json:
-            type:
-              mapping:
-                account:com.gentlecorp.customer.model.dto.AccountDTO,
-                shoppingCart:com.gentlecorp.customer.model.dto.ShoppingCartDTO,
 
   graphql:
     graphiql:
@@ -86,39 +85,43 @@ spring:
   profiles:
     active: ${app.env}
   application:
-    name: account
-  mail:
-    host: localhost
-    port: 5025
-  #  mail:
-  #    host: smtp.acme.com
-  #    port: 25
-  #    #protocol: smtp
-  #    properties.mail:
-  #      debug: false
-  #      smtp:
-  #        auth: false
-  #        starttls.enable: false
-  #    # Mailserver des IZ
-  #    #host: smtp.h-ka.de
-  #    #port: 23
-  #    #username: nnvv0011
-  #    #password: blabla
-  #    # GMail
-  #    #host: smtp.gmail.com
-  #    #port: 587
-  #    #properties.mail.smtp.starttls.enable: true
+    name: account-service
+    version: 25.05.01
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://${app.keycloak.host}:${app.keycloak.port}/auth/realms/${app.keycloak.realm}
 
+
+management:
+  metrics:
+    enable:
+      all: true
+  endpoints:
+    prometheus:
+      enabled: true
+    web:
+      exposure:
+        include:
+          - prometheus
+          - health
+          - info
+          - metrics
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      # endpoint: http://tempo:4318
+      endpoint: http://localhost:4318/v1/traces
+      # endpoint: http://localhost:4317
+
 # Applikationsspezifische Einstellungen
 app:
-  mail:
-    from: Theo Test <theo@test.de>
-    to: Maxi Musterfrau <maxi.musterfrau@test.de>
+  version: ${spring.application.version}
+  name: ${spring.application.name}
+  groupId: gentlecorp-${spring.application.name}
   env: ${ACTIVE_PROFILE:dev}
   password: p
   keycloak:
@@ -170,5 +173,7 @@ logging:
     org.springframework.test.context.support.DefaultTestContextBootstrapper: warn
     org.springframework.data.mongodb: debug
     org.junit.jupiter: warn
+
+    org.springframework.kafka.support.serializer: DEBUG
 
     # org.springframework.graphql: debug

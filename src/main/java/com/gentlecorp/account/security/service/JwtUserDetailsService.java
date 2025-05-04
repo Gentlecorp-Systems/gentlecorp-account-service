@@ -1,9 +1,11 @@
 package com.gentlecorp.account.security.service;
 
+import com.gentlecorp.account.messaging.KafkaPublisherService;
 import com.gentlecorp.account.security.CustomUserDetails;
 import com.gentlecorp.account.security.enums.RoleType;
+import com.gentlecorp.account.tracing.LoggerPlus;
+import com.gentlecorp.account.tracing.LoggerPlusFactory;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,8 +31,11 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class JwtUserDetailsService {
+    private final LoggerPlusFactory factory;
+    private LoggerPlus logger() {
+        return factory.getLogger(getClass());
+    }
 
     /**
      * Erstellt ein `UserDetails`-Objekt aus einem JWT.
@@ -39,12 +44,12 @@ public class JwtUserDetailsService {
      * @return Ein `UserDetails`-Objekt mit Benutzerinformationen.
      */
     public UserDetails loadUserDetailsFromJwt(Jwt jwt) {
-        log.debug("Extrahiere UserDetails aus JWT: {}", jwt.getTokenValue());
+        logger().debug("Extrahiere UserDetails aus JWT: {}", jwt.getTokenValue());
 
         // ✅ Extrahiere Benutzername aus JWT (z. B. `preferred_username`)
         String username = jwt.getClaimAsString("preferred_username");
         if (username == null) {
-            log.warn("JWT enthält keinen 'preferred_username'-Claim.");
+            logger().warn("JWT enthält keinen 'preferred_username'-Claim.");
             throw new IllegalArgumentException("JWT enthält keinen 'preferred_username'-Claim.");
         }
 
@@ -55,10 +60,11 @@ public class JwtUserDetailsService {
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
             .collect(Collectors.toList());
 
-        log.debug("Benutzer '{}' hat Rollen: {}", username, authorities);
+        logger().debug("Benutzer '{}' hat Rollen: {}", username, authorities);
 
         return new CustomUserDetails(username, authorities,jwt);
     }
+
 
     /**
      * Extrahiert die Rollen aus `realm_access.roles`, auch wenn sie verschachtelt sind.
@@ -75,7 +81,7 @@ public class JwtUserDetailsService {
             if (realmAccess != null && realmAccess.containsKey("roles")) {
                 @SuppressWarnings("unchecked")
                 List<String> extractedRoles = (List<String>) realmAccess.get("roles");
-                // log.debug("Extracted roles: {}", extractedRoles);
+                // logger.debug("Extracted roles: {}", extractedRoles);
                 return extractedRoles != null
                     ? extractedRoles.stream()
                     .map(role -> role.replace(" ", "_").toUpperCase()) // Ersetzt Leerzeichen mit Unterstrichen
@@ -89,7 +95,7 @@ public class JwtUserDetailsService {
             // ✅ Entferne Leerzeichen und konvertiere in Uppercase
             ? roles.stream()
                 .map(role -> role.replace(" ", "_").toUpperCase()) // Ersetzt Leerzeichen mit Unterstrichen
-                .filter(role -> isValidRole(role)) // Überprüft, ob die Rolle existiert
+                .filter(this::isValidRole) // Überprüft, ob die Rolle existiert
                 .toList()
             : new ArrayList<>();
     }
@@ -105,7 +111,7 @@ public class JwtUserDetailsService {
             RoleType.valueOf(role);
             return true;
         } catch (IllegalArgumentException e) {
-            // log.warn("Unbekannte Rolle: {}", role);
+            // logger.warn("Unbekannte Rolle: {}", role);
             return false;
         }
     }

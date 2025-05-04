@@ -3,6 +3,7 @@ package com.gentlecorp.account.security;
 import com.gentlecorp.account.security.service.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,8 @@ public class JwtToUserDetailsConverter implements Converter<Jwt, AbstractAuthent
     private final JwtUserDetailsService jwtUserDetailsService;
 
     @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
+    @NonNull
+    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
         CustomUserDetails userDetails = (CustomUserDetails) jwtUserDetailsService.loadUserDetailsFromJwt(jwt);
         return new CustomAuthenticationToken(userDetails, jwt, userDetails.getAuthorities());
     }

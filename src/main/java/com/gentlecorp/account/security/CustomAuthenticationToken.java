@@ -15,9 +15,9 @@ import java.util.Collection;
  * und wird zur Authentifizierung in Spring Security verwendet.
  * </p>
  *
- * @since 14.02.2025
+ * @since 25.05.03
  * @author <a href="mailto:caleb-script@outlook.de">Caleb Gyamfi</a>
- * @version 1.0
+ * @version 2.0
  */
 @Getter
 public class CustomAuthenticationToken extends AbstractAuthenticationToken {
@@ -48,5 +48,4 @@ public class CustomAuthenticationToken extends AbstractAuthenticationToken {
     public Object getPrincipal() {
         return userDetails;
     }
-
 }

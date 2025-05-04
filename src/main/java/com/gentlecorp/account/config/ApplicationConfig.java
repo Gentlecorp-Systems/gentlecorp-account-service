@@ -9,7 +9,7 @@ package com.gentlecorp.account.config;
  * @author <a href="mailto:caleb-script@outlook.de">Caleb Gyamfi</a>
  * @version 1.0
  */
-public final class ApplicationConfig implements SecurityConfig, KeycloakClientConfig {
+public final class ApplicationConfig implements SecurityConfig {
 
   /**
    * Privater Konstruktor, um Instanzen dieser Klasse zu verhindern.

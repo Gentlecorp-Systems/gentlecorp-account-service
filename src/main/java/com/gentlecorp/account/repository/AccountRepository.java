@@ -1,9 +1,6 @@
 package com.gentlecorp.account.repository;
 
-import com.gentlecorp.account.model.entity.Account;
-import org.springframework.data.domain.Example;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.EntityGraph;
+import com.gentlecorp.account.models.entities.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.lang.NonNull;
@@ -23,6 +20,10 @@ public interface AccountRepository extends JpaRepository<Account, UUID>, JpaSpec
     @Override
     Optional<Account> findById(@NonNull UUID id);
 
-    List<Account>  findByUsername(String username);
+    @NonNull
+    List<Account>  findByUsername(@NonNull String username);
+
+    @NonNull
+    List<Account>  findByUserId(@NonNull UUID customerId);
 }
 
